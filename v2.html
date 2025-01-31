@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live HTML & CSS Editor</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            background-color: white;
+            color: black;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .container {
+            display: flex;
+            width: 100%;
+            gap: 10px;
+        }
+        textarea {
+            width: 50%;
+            height: 300px;
+            font-family: monospace;
+            background-color: white;
+            color: black;
+            border: 1px solid #ccc;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        iframe {
+            width: 50%;
+            height: 300px;
+            border: 1px solid #ccc;
+            background-color: white;
+            transition: background-color 0.3s;
+        }
+        .theme-toggle {
+            margin: 10px;
+            padding: 5px 10px;
+            cursor: pointer;
+            border: none;
+            background-color: #333;
+            color: white;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .theme-toggle:hover {
+            background-color: #555;
+        }
+        .dark-mode {
+            background-color: #1e1e1e;
+            color: white;
+        }
+        .dark-mode textarea {
+            background-color: #2d2d2d;
+            color: white;
+            border: 1px solid #555;
+        }
+        .dark-mode iframe {
+            background-color: #333;
+            border: 1px solid #555;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h2>Live HTML & CSS Editor</h2>
+    <button class="theme-toggle" onclick="toggleTheme()">Toggle Dark Mode</button>
+    <div class="container">
+        <textarea id="htmlCssEditor" placeholder="Write your HTML & CSS here..."></textarea>
+        <iframe id="preview"></iframe>
+    </div>
+    <script>
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            document.getElementById('preview').classList.toggle('dark-mode');
+            updatePreviewTheme();
+        }
+        function updatePreviewTheme() {
+            const iframe = document.getElementById('preview').contentWindow.document;
+            const darkMode = document.body.classList.contains('dark-mode');
+            const style = `body { background-color: ${darkMode ? '#333' : 'white'}; color: ${darkMode ? 'white' : 'black'}; transition: background-color 0.3s, color 0.3s; }`;
+            iframe.head.innerHTML = `<style>${style}</style>`;
+        }
+        document.getElementById('htmlCssEditor').addEventListener('input', function() {
+            const code = this.value;
+            const iframe = document.getElementById('preview').contentWindow.document;
+            iframe.open();
+            iframe.write(`<html><head></head><body>${code}</body></html>`);
+            iframe.close();
+            updatePreviewTheme();
+        });
+    </script>
+</body>
+</html>
